@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "strictNullChecks": false,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "noUnusedLocals": false,
+    "types": ["@types/node"],
+    "sourceMap": true
+  },
+
+  "include": [
+    "."
+  ],
+
+  "exclude": [
+    "./node_modules"
+  ]
+}

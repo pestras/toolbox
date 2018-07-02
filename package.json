@@ -1,0 +1,30 @@
+{
+  "name": "tools-box",
+  "version": "0.0.1",
+  "description": "JavaScript utility and helper functions",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ammar6885/tools-box.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "utility",
+    "helpers",
+    "function",
+    "methods"
+  ],
+  "author": {
+    "name": "AmmAr Mourad",
+    "email": "amrmrd111spcl@hotmail.com"
+  },
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ammar6885/tools-box/issues"
+  },
+  "homepage": "https://github.com/ammar6885/tools-box#readme"
+}
