@@ -1,8 +1,9 @@
 .vscode
-/test
+test.*
 node_modules
 /tsconfig.json
 npm-debug.log
 *.ts
 !*.d.ts
 *.map.js
+TODO.md

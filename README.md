@@ -1,4 +1,15 @@
 # tools-box
 JavaScript utility and helper functions
 
-In Development.
+## Installation:
+
+```js
+npm install --save gypsum
+```
+
+
+## Stateus
+
+In development
+
+
