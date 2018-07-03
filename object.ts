@@ -153,7 +153,7 @@ export function getOwnPropertyList(src: any, propName: string, path?: string): {
       for (let i = 0; i < src.length; i++) {
         if (typeof src[i] === "object") {
           let subResults = getOwnPropertyList(src[i], propName, path + i);
-          if (Object.keys(subResults).length)
+          if (subResults && Object.keys(subResults).length)
             Object.assign(result, subResults);
         }          
       }
@@ -162,7 +162,7 @@ export function getOwnPropertyList(src: any, propName: string, path?: string): {
       for (let prop in src) {
         if (typeof src[prop] === "object") {
           let subResults = getOwnPropertyList(src[prop], propName, path + prop);
-          if (Object.keys(subResults).length)
+          if (subResults && Object.keys(subResults).length)
             Object.assign(result, subResults);
         }          
       }
