@@ -3,8 +3,8 @@ JavaScript utility and helper functions
 
 ## Installation:
 
-```js
-npm install --save gypsum
+```repl
+npm install --save tools-box
 ```
 
 
