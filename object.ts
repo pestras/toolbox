@@ -456,7 +456,7 @@ export function getChanges(obj1: any, obj2: any): { count: number, changes: [any
   return results;
 }
 
-export function getArrayChanges(arr1: any[], arr2: any[], key: string): { count: number; changes: [any, any]; _id: string }[] {
+export function getArrayChanges(arr1: any[], arr2: any[], key: string): { [key: string]: { count: number; changes: [any, any]; }} {
   let arrRef1 = arr1.length > arr2.length ? arr1 : arr2;
   let arrRef2 = arr1.length > arr2.length ? arr2 : arr1;
   let swipe = arrRef1 === arr1 ? false : true;
