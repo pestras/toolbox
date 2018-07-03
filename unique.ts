@@ -4,44 +4,44 @@ let characters: any = {
   numbers: '1,2,3,4,5,6,7,8,9,0'.split(',')
 };
 
-export class Unique {
-  private repo: any[] = [];
+let repo: any[] = [];
 
-  private genCode(type: string, length: number) {
-    let collection, code, random, index, i;
-  
-    length = length || 10;
-    type = type || 'letters capitals numbers';
-  
-    collection = type.split(' ').reduce(function (prev, curr) {
-      return prev.concat(characters[curr]);
-    }, []);
-  
-    while (true) {
-      code = "";
-      for (i = 0; i < length; i++) {
-        index = Math.floor(Math.random() * collection.length);
-        code += collection[index];
-      }
-  
-      if (this.repo.indexOf(code) === -1) {
-        this.repo.push(code);
-        break;
-      }
+function genCode(type: string, length: number) {
+  let collection, code, random, index, i;
+
+  length = length || 10;
+  type = type || 'letters capitals numbers';
+
+  collection = type.split(' ').reduce(function (prev, curr) {
+    return prev.concat(characters[curr]);
+  }, []);
+
+  while (true) {
+    code = "";
+    for (i = 0; i < length; i++) {
+      index = Math.floor(Math.random() * collection.length);
+      code += collection[index];
     }
-  
-    return code;
+
+    if (repo.indexOf(code) === -1) {
+      repo.push(code);
+      break;
+    }
   }
 
-  Get(type = 'letters capitals numbers', length = 14) {
-    return this.genCode(type, length);
+  return code;
+}
+
+export class Unique {
+  static Get(type = 'letters capitals numbers', length = 14) {
+    return genCode(type, length);
   }
   
-  Clear() {
-    this.repo = [];
+  static Clear() {
+    repo = [];
   }
 
-  Extend(name: string, list: string | string[]) {
+  static Extend(name: string, list: string | string[]) {
     if (['letters', 'capitals', 'numbers'].indexOf(name) > 0) console.log(name + ' cannot be overwritten');
     else {
       if (list instanceof Array) {
@@ -54,7 +54,3 @@ export class Unique {
     }
   }
 }
-
-let unique = new Unique();
-
-export default unique;
