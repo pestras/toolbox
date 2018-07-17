@@ -383,12 +383,8 @@ export function getChanges(obj1: any, obj2: any): { count: number, changes: [any
   let obj1Size = Object.keys(obj1).length;
   let obj2Size = Object.keys(obj2).length;
 
-  if (obj1Size === 0 || obj2Size === 0) {
-    results.changes[0] = obj1;
-    results.changes[1] = obj2;
-    results.count++;
+  if (obj1Size === 0 || obj2Size === 0)
     return results;
-  }
 
   let ref1 = obj1Size >= obj2Size ? obj1 : obj2;
   let ref2 = obj1Size >= obj2Size ? obj2 : obj1;
