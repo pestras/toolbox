@@ -1,4 +1,89 @@
-import { queryStrToObject } from "./object";
+import { stringify } from './string';
+
+function parse(str: string): any {
+  var result: any;
+  var type: string;
+
+  if (str === 'null') return null;
+  if (str === 'undefined') return undefined;
+  if (!isNaN(Number(str))) return Number(str);
+  if (str === 'true') return true;
+  if (str === 'false') return false;
+
+  if (str.charAt(0) === '/') {
+    let parts = decodeURI(str).split('/');
+    let flags = parts.pop();
+    str = parts.join('/').replace(/^\/|\/$/g, '');
+    return new RegExp(str, flags);
+  }
+
+  if (str.charAt(0) === '{') {
+    result = {};
+    type = 'object';
+  } else if (str.charAt(0) === '[') {
+    result = [];
+    type = 'array'
+  } else return decodeURI(str);
+
+  str = decodeURI(str).slice(1, -1);
+
+  let temp: any = { value: '', prop: '' }
+  let context: string = type === 'array' ? 'value' : 'prop';
+  let level: number = 0;
+
+  for (let i = 0; i < str.length; i++) {
+    if (str.charAt(i) === ':' && level === 0 && type === 'object') {
+      context = 'value';
+      continue;
+    } else if (str.charAt(i) === '[') {
+      level++;
+    } else if (str.charAt(i) === ']') {
+      level--;
+    } if (str.charAt(i) === '{') {
+      level++;
+    } else if (str.charAt(i) === '}') {
+      level--;
+    } else if (str.charAt(i) === ',' && level === 0) {
+      if (type === 'array') {
+        result.push(temp.value.trim());
+      } else {
+        result[temp.prop.trim()] = temp.value.trim();
+        context = 'prop';
+      }
+
+      temp.prop = '';
+      temp.value = '';
+      continue;
+    }
+
+    temp[context] += str.charAt(i);
+
+    if (i === str.length - 1) {
+      if (type === 'array') result.push(temp.value.trim());
+      else result[temp.prop.trim()] = temp.value.trim();
+    }
+  }
+
+  if (type === 'array')
+    result = result.map((prop: any) => parse(prop));
+  else
+    for (let prop in result)
+      result[prop] = parse(result[prop]);
+
+  return result;
+}
+  
+function objectToQueryStr(obj: { [key: string]: any }, encode?: boolean): string {
+  let result = "";
+
+  if (!obj || !Object.keys(obj).length)
+    return result;
+
+  for (let prop in obj)
+    result += '&' + prop + '=' + stringify(obj[prop]);
+
+  return encode ? encodeURI(result.slice(1)) : result.slice(1);
+}
 
 function getPath(url: string): string {
   if (url.indexOf('://') > -1)
@@ -37,6 +122,22 @@ function getQuery(url: string) {
     query = query.split('#')[0];
 
   return query;
+}
+
+function queryStrToObject(query: string): any {
+  query = decodeURI(query);
+
+  let result: any = {};
+  let parts: any[] = query.split('&');
+
+  for (let i = 0; i < parts.length; i++) {
+    let part: any = parts[i];
+    let pair: any[] = part.split('=');
+
+    result[pair[0]] = pair[1] ? parse(pair[1]) : null;
+  }
+
+  return result;
 }
 
 function getParamsObject(url: string, pattern: string): any {
@@ -84,7 +185,7 @@ function getOrigin(url: string) {
   return `${protocol}://${url}`;
 }
 
-function matchPattern(pattern: string, url: string) {
+function matchPattern(url: string, pattern: string) {
   let patternBlocks = clean(pattern).split('/');
   let paramsNames = pattern.match(/:\w+/g) || [];
   let urlBlocks = clean(getPath(url)).split('/');
@@ -150,6 +251,10 @@ export class URL {
     return queryStrToObject(getQuery(url));
   }
 
+  static ToQuery(value: any): string {
+    return objectToQueryStr(value);
+  }
+
   static GetHash(url: string): string {
     return getHash(url);
   }
@@ -164,6 +269,10 @@ export class URL {
 
   static GetProtocol(url: string): string {
     return getOrigin(url).split('://')[0];
+  }
+
+  static MatchPattern(url: string, pattern: string): boolean {
+    return matchPattern(url, pattern);
   }
 
   private _prepare() {
@@ -210,9 +319,10 @@ export class URL {
 
   toString() { return this.url; }
   toLocalString() { return this.url; }
+
   matchPattern(url?: string): boolean {
     if (this._pattern)
-      return matchPattern(this._pattern, url || this.url);
+      return matchPattern(url || this.url, this._pattern);
 
     return false;
   }

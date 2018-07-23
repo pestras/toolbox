@@ -122,15 +122,3 @@ export function stringify(value: any): string {
 
   return result;
 }
-
-export function objectToQueryStr(obj: { [key: string]: any }, encode?: boolean): string {
-  let result = "";
-
-  if (!obj || !Object.keys(obj).length)
-    return result;
-
-  for (let prop in obj)
-    result += '&' + prop + '=' + stringify(obj[prop]);
-
-  return encode ? encodeURI(result.slice(1)) : result.slice(1);
-}
