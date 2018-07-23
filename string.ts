@@ -7,20 +7,6 @@ export function strSplice(src: string, start: number, deleteCount: number = src.
   return src.slice(0, start) + insertion + src.slice(end, src.length);
 }
 
-export function cleanPath(path: string): string {
-  if (!path)
-    return "";
-
-  path = path.trim()
-    .replace(/^\/|\/$/g, "")
-    .replace(/:\/\//, '%')
-    .replace(/\/{2,}/g, "/")
-    .replace('%', '://')
-    .replace(/(\w+)\/\.\./g, "$1");
-
-  return path;
-}
-
 export function getFileExtension(fileName: string): string {
   if (!fileName || fileName.indexOf(".") < 0) return "";
   return fileName.slice(fileName.lastIndexOf(".") + 1);
@@ -49,7 +35,7 @@ export function compile(template: string, data: { [key: string]: any }): string 
 export function parseTime(timeStr: string): number {
   let time = 0;
   let parts = timeStr.split(' ');
-  let map: {[key: string]: number} = { y: 217728000, o: 18144000, w: 604800, d: 86400, h: 3600, m: 60, s: 1 };
+  let map: { [key: string]: number } = { y: 217728000, o: 18144000, w: 604800, d: 86400, h: 3600, m: 60, s: 1 };
 
   parts.forEach(function (part) {
     if (!part.length) return time += 0;
@@ -65,7 +51,7 @@ export function parseTime(timeStr: string): number {
 }
 
 export function random(length: number = 16, type: string = 'letters capitals numbers'): string {
-  let code = '';  
+  let code = '';
   let characters: any = {
     letters: 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z'.split(','),
     capitals: 'A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z'.split(','),
@@ -76,8 +62,8 @@ export function random(length: number = 16, type: string = 'letters capitals num
   }, []);
 
   for (let i = 0; i < length; i++) {
-      let index = Math.floor(Math.random() * collection.length);
-      code += collection[index];
+    let index = Math.floor(Math.random() * collection.length);
+    code += collection[index];
   }
 
   return code;
@@ -137,7 +123,7 @@ export function stringify(value: any): string {
   return result;
 }
 
-export function objectToQueryStr(obj: {[key: string]: any}, encode?: boolean): string {
+export function objectToQueryStr(obj: { [key: string]: any }, encode?: boolean): string {
   let result = "";
 
   if (!obj || !Object.keys(obj).length)
