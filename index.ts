@@ -4,6 +4,7 @@ import * as objectUtil from './object';
 import * as crypt from './crypt';
 import { Unique } from './unique';
 import { URL } from './url';
+import { Types } from './types';
 
 export default {
   ...stringUtil,
@@ -11,5 +12,6 @@ export default {
   ...objectUtil,
   ...crypt,
   Unique,
-  URL
+  URL,
+  Types
 }

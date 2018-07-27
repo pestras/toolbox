@@ -185,17 +185,18 @@ function getOrigin(url: string) {
   return `${protocol}://${url}`;
 }
 
-function matchPattern(url: string, pattern: string) {
-  let patternBlocks = clean(pattern).split('/');
-  let paramsNames = pattern.match(/:\w+/g) || [];
-  let urlBlocks = clean(getPath(url)).split('/');
+function matchPathPattern(url: string, pattern:string) {
+  let patternBlocks = URL.Clean(pattern).split('/');
+  let paramsNames = pattern.match(/:[a-zA-Z0-9\?]+/g) || [];
+  let urlBlocks = URL.Clean(URL.GetPath(url)).split('/');
 
-  if (urlBlocks.length !== patternBlocks.length)
+  if (urlBlocks.length > patternBlocks.length)
     return false;
 
   for (let i = 0; i < patternBlocks.length; i++) {
     if (paramsNames.indexOf(patternBlocks[i]) > -1)
-      continue;
+      if (urlBlocks[i] || patternBlocks[i].indexOf('?') > -1)
+        continue;
 
     if (patternBlocks[i] !== urlBlocks[i])
       return false;
@@ -204,9 +205,25 @@ function matchPattern(url: string, pattern: string) {
   return true;
 }
 
-function getMatches(pattern: string, urls: string[]) {
-  let patternBlocks = clean(pattern).split('/');
-  let paramsNames = pattern.match(/:\w+/g) || [];
+function generateServiceUrl(pattern: string, params: { [key: string]: string } = null, query: any = null): string {
+  let path = "";
+  if (params && Object.keys(params).length) {
+    path = pattern.replace(/(:[a-zA-Z0-9_-]+\?*)/g, (match, $1) => {
+      let key = $1.slice(1);
+
+      if (key.indexOf('?') > -1)
+        return params[key.slice(0, key.length - 1)] || '';
+
+      return params[key] || '';
+    });
+
+    path = URL.Clean(path);
+  }
+
+  if (query && Object.keys(query).length)
+    path += '?' + URL.ToQuery(query);
+
+  return path;
 }
 
 /**
@@ -215,7 +232,7 @@ function getMatches(pattern: string, urls: string[]) {
  */
 export class URL {
   private _paramsNames: string[];
-  private _pattern: string;
+  private _pathPattern: string;
   private _url: string;
   private _path: string;
   private _query: string;
@@ -224,12 +241,11 @@ export class URL {
   private _protocol: string;
   private _hash: string;
   private _isSecure: boolean;
-  queryObject: any;
-  params: { [key: string]: string } = {};
+  private _params: { [key: string]: string } = {};
 
   constructor(url?: string, pattern?: string) {
     this._url = url || null;
-    this._pattern = pattern || null;
+    this._pathPattern = pattern || null;
 
     if (url)
       this._prepare();
@@ -272,7 +288,11 @@ export class URL {
   }
 
   static MatchPattern(url: string, pattern: string): boolean {
-    return matchPattern(url, pattern);
+    return matchPathPattern(url, pattern);
+  }
+
+  static From(pattern: string, params: { [key: string]: string } = null, query: any = null): string {
+    return generateServiceUrl(pattern, params, query);
   }
 
   private _prepare() {
@@ -282,33 +302,56 @@ export class URL {
     [this._protocol, this._hostname] = this._origin.split('://');
     this._hash = getHash(this.url);
     this._isSecure = this._protocol.charAt(this._protocol.length - 1) === 's';
-    this.queryObject = queryStrToObject(this._query);
 
-    if (this.pattern)
+    if (this.pathPattern)
       this._prepareParams();
   }
 
   private _prepareParams() {
-    this._paramsNames = (this._pattern.match(/:\w+/g) || []).map(entry => entry.slice(1));
-    this.params = getParamsObject(this.url, this.pattern);
+    this._paramsNames = (this._pathPattern.match(/:\w+/g) || []).map(entry => entry.slice(1));
+    this._params = getParamsObject(this.url, this._pathPattern);
   }
 
   get url() { return this._url; }
   set url(value: string) {
-    this._url = value;
-    this._prepare()
+    if (!this._pathPattern || (this._pathPattern && matchPathPattern(value, this._pathPattern))) {
+      this._url = value;
+      this._prepare();
+    } else {
+      console.warn('url set was deinied due to unmatched current path pattern');
+    }
   }
 
-  get pattern() { return this._pattern; }
-  set pattern(value: string) {
+  get pathPattern() { return this._pathPattern; }
+  set pathPattern(value: string) {
     if (!value)
       return;
 
-    this._pattern = value;
-    this._prepareParams();
+      if (this._url && matchPathPattern(this._url, value)) {
+        this._pathPattern = value;
+        this._prepareParams();
+      } else {        
+        console.warn('path pattern set was deinied due to unmatched current url');
+      }
+
+  }
+
+  get params(): {[key: string]: string} { return Object.assign({}, this.params); }
+  set params(value: {[key: string]: string}) {
+    this._params = value || {};
+    this._url = generateServiceUrl(this.pathPattern, this._params, this.queryObject);
   }
 
   get query() { return this._query; }
+  set query(value: any) {
+    if (typeof value === "object") {
+      let queryObject = value || {};
+      this._query = objectToQueryStr(queryObject);
+      this.url = generateServiceUrl(this.pathPattern, this.params, queryObject);
+    }
+  }
+
+  get queryObject(): any { return queryStrToObject(this._query); }
   get path() { return this._path; }
   get origin() { return this._origin; }
   get hostname() { return this._hostname; }
@@ -320,10 +363,17 @@ export class URL {
   toString() { return this.url; }
   toLocalString() { return this.url; }
 
-  matchPattern(url?: string): boolean {
-    if (this._pattern)
-      return matchPattern(url || this.url, this._pattern);
+  matchPathPattern(url?: string): boolean {
+    if (this._pathPattern)
+      return matchPathPattern(url || this.url, this._pathPattern);
 
     return false;
+  }
+
+  setParam(key: string, value: string) {
+    if (this._params.hasOwnProperty(key)) {
+      this._params[key] = value || '';
+      this._url = generateServiceUrl(this.pathPattern, this.params, this.queryObject);
+    }
   }
 }
