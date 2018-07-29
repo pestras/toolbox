@@ -187,11 +187,15 @@ function getOrigin(url: string) {
 
 function matchPathPattern(url: string, pattern:string) {
   let patternBlocks = URL.Clean(pattern).split('/');
-  let paramsNames = pattern.match(/:[a-zA-Z0-9\?]+/g) || [];
+  let paramsNames = pattern.match(/(:[a-zA-Z0-9_-]+\??)/g) || [];
   let urlBlocks = URL.Clean(URL.GetPath(url)).split('/');
 
-  if (urlBlocks.length > patternBlocks.length)
+  if (urlBlocks.length > patternBlocks.length) {
+    if (pattern.charAt(pattern.length - 1) === '*')
+      return true
+    
     return false;
+  }
 
   for (let i = 0; i < patternBlocks.length; i++) {
     if (paramsNames.indexOf(patternBlocks[i]) > -1)
@@ -205,20 +209,19 @@ function matchPathPattern(url: string, pattern:string) {
   return true;
 }
 
-function generateServiceUrl(pattern: string, params: { [key: string]: string } = null, query: any = null): string {
+function generateServiceUrl(pattern: string, params: { [key: string]: string } = {}, query: any = null): string {
   let path = "";
-  if (params && Object.keys(params).length) {
-    path = pattern.replace(/(:[a-zA-Z0-9_-]+\?*)/g, (match, $1) => {
-      let key = $1.slice(1);
 
-      if (key.indexOf('?') > -1)
-        return params[key.slice(0, key.length - 1)] || '';
+  path = pattern.replace(/(:[a-zA-Z0-9_]+\??\*?)/g, (match, $1) => {
+    let key = $1.slice(1);
 
-      return params[key] || '';
-    });
+    if (key.indexOf('?') > -1)
+      return params ? params[key.slice(0, key.length - 1)] || '' : '';
 
-    path = URL.Clean(path);
-  }
+    return params ? params[key] || '' : '';
+  });
+
+  path = URL.Clean(path);
 
   if (query && Object.keys(query).length)
     path += '?' + URL.ToQuery(query);
