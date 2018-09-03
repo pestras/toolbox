@@ -1,4 +1,4 @@
-import { capitalizeFirst } from "./string";
+import { capitalizeFirst } from "./string/capitalize-first";
 
 const typesMap = {
   list: [Number, Boolean, String, Date, RegExp, Object, Array, Function],

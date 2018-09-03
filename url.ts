@@ -1,4 +1,4 @@
-import { stringify } from './string';
+import { stringify } from './string/stringify';
 
 function parse(str: string): any {
   var result: any;
@@ -336,7 +336,6 @@ export class URL {
       } else {        
         console.warn('path pattern set was deinied due to unmatched current url');
       }
-
   }
 
   get params(): {[key: string]: string} { return Object.assign({}, this.params); }
