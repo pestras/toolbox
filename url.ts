@@ -1,7 +1,5 @@
 import { stringify } from './string/stringify';
 
-// comment
-
 function parse(str: string): any {
   var result: any;
   var type: string;
