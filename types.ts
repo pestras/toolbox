@@ -5,12 +5,12 @@ const typesMap = {
   values: ['number', 'boolean', 'string', 'date', 'regexp', 'object', 'array', 'function']
 };
 
-const typesList: string[] = ['number', 'int', 'float', 'string', 'boolean', 'primitive', 'date', 'regexp', 'function', 'object'];
+const typesList = ['number', 'int', 'float', 'string', 'boolean', 'primitive', 'date', 'regexp', 'function', 'object'];
 // 'number[]', 'int[]', 'float[]', 'string[]', 'boolean[]', 'primitive[]', 'date[]', 'regexp[]', 'function[]', 'object[]', 'array', 'any'
 
-function searchMap(value: string) {
+function searchMap(value: any) {
   if (typeof value === "function") {
-    let index = typesList.indexOf(value);
+    let index = typesMap.list.indexOf(value);
 
     if (index > -1)
       return typesMap.values[index];
@@ -35,82 +35,84 @@ function searchReverseMap(values: string[]): any[] {
   return result;
 }
 
-export class Types {
+export const Types = {
 
-  static isValidType(type: string): boolean {
+  isValidType(type: string): boolean {
     return typesList.indexOf(type) > -1;
-  }
+  },
 
-  static isNumber(value: any): boolean {
+  isNumber(value: any): boolean {
     return typeof value === 'number';
-  }
+  },
 
-  static isInt(value: any): boolean {
-    return (Types.isNumber(value) && ("" + value).indexOf('.') === -1);
-  }
+  isInt(value: any): boolean {
+    return (typeof value === 'number' && ("" + value).indexOf('.') === -1);
+  },
 
-  static isFloat(value: any): boolean {
-    return (Types.isNumber(value) && ("" + value).indexOf('.') > -1);
-  }
+  isFloat(value: any): boolean {
+    return (typeof value === 'number' && ("" + value).indexOf('.') > -1);
+  },
 
-  static isString(value: any): boolean {
+  isString(value: any): boolean {
     return typeof value === 'string';
-  }
+  },
 
-  static isBoolean(value: any): boolean {
+  isBoolean(value: any): boolean {
     return typeof value === 'boolean';
-  }
+  },
 
-  static isPrimitive(value: any): boolean {
+  isPrimitive(value: any): boolean {
     return (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean');
-  }
+  },
 
-  static isDate(value: any): boolean {
+  isDate(value: any): boolean {
     return value instanceof Date;
-  }
+  },
 
-  static isRegExp(value: any): boolean {
+  isRegExp(value: any): boolean {
     return value instanceof RegExp;
-  }
+  },
 
-  static isFunction(value: any): boolean {
+  isFunction(value: any): boolean {
     return typeof value === 'function';
-  }
+  },
 
-  static isObject(value: any): boolean {
+  isObject(value: any): boolean {
     return value && typeof value === "object" && value.toString() === "[object Object]";
-  }
+  },
 
-  static isArray(value: any): boolean {
+  isArray(value: any): boolean {
     return Array.isArray(value);
-  }
+  },
 
-  static isArrayOf(type: string, value: any[]): boolean {
+  isArrayOf(type: string, value: any[]): boolean {
     let lng = type.length;
 
     if (type.charAt(lng - 1) === 's')
       type = type.slice(0, lng - 1);
 
-    if (Types.isValidType(type) && Array.isArray(value))
-      return value.every((entry: any) => (<any>Types)[`is${capitalizeFirst(type)}`](entry));
+    if (this.isValidType(type) && Array.isArray(value))
+      return value.every((entry: any) => (<any>this)[`is${capitalizeFirst(type)}`](entry));
 
     return false;
-  }
+  },
 
-  static getTypesOf(value: any): string[] {
+  getTypesOf(value: any): string[] {
     let types = ['any'];
-    if (Array.isArray(value)) {
+    if (!Array.isArray(value)) {
       for (let i = 0; i < typesList.length; i++)
-        if ((<any>Types)[capitalizeFirst(typesList[i])](value))
+        if ((<any>this)[capitalizeFirst(typesList[i])](value))
           types.push(typesList[i]);
     } else {
       types.push('array', 'any[]');
       for (let i = 0; i < typesList.length; i++)
-        if (Types.isArrayOf(typesList[i], value))
+        if (this.isArrayOf(typesList[i], value))
           types.push(typesList[i] + '[]');
 
-      if (Array.isArray(value) && Types.isObject(value[0]))
+      if (Types.isObject(value[0])) {
         types.push(value[0].constructor.name + '[]');
+        types.push('object[]');
+      }
     }
 
     types.push(...searchReverseMap(types));
