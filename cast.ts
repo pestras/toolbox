@@ -7,7 +7,7 @@ export function cast(val: any, type: 'boolean' | 'string' | 'number' | 'date' | 
     return !!val;
 
   if (type === 'number') {
-    if (Types.isPrimitive(val)) {
+    if (Types.primitive(val)) {
       val = +val;
 
       if (val === NaN)
@@ -21,14 +21,14 @@ export function cast(val: any, type: 'boolean' | 'string' | 'number' | 'date' | 
   }
 
   if (type === 'string') {
-    if (Types.isPrimitive(val) || Types.isDate(val) || Types.isRegExp(val) || Types.isFunction(val))
+    if (Types.primitive(val) || Types.date(val) || Types.regExp(val) || Types.function(val))
       return "" + val;
-    else if (Types.isObject(val) || Array.isArray(val))
+    else if (Types.object(val) || Array.isArray(val))
       return JSON.stringify(val);
   }
 
   if (type === 'date') {
-    if (Types.isNumber(val) || Types.isString(val)) {
+    if (Types.number(val) || Types.string(val)) {
       let d = new Date(val);
 
       if (d.toString() === "Invalid Date")
@@ -37,17 +37,17 @@ export function cast(val: any, type: 'boolean' | 'string' | 'number' | 'date' | 
       return d;
     }
 
-    if (Types.isDate(val))
+    if (Types.date(val))
       return val;
 
     throw "can't cast value to a date!";
   }
 
   if (type === "regexp") {
-    if (Types.isPrimitive(val))
+    if (Types.primitive(val))
       return new RegExp(val);
 
-    if (Types.isRegExp(val))
+    if (Types.regExp(val))
       return val;
 
     throw "can't cast value to a regexp!";

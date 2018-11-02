@@ -41,58 +41,58 @@ export const Types = {
     return typesList.indexOf(type) > -1;
   },
 
-  isNumber(value: any): boolean {
+  number(value: any): boolean {
     return typeof value === 'number';
   },
 
-  isInt(value: any): boolean {
+  int(value: any): boolean {
     return (typeof value === 'number' && ("" + value).indexOf('.') === -1);
   },
 
-  isFloat(value: any): boolean {
+  float(value: any): boolean {
     return (typeof value === 'number' && ("" + value).indexOf('.') > -1);
   },
 
-  isString(value: any): boolean {
+  string(value: any): boolean {
     return typeof value === 'string';
   },
 
-  isBoolean(value: any): boolean {
+  boolean(value: any): boolean {
     return typeof value === 'boolean';
   },
 
-  isPrimitive(value: any): boolean {
+  primitive(value: any): boolean {
     return (typeof value === 'number' || typeof value === 'string' || typeof value === 'boolean');
   },
 
-  isDate(value: any): boolean {
+  date(value: any): boolean {
     return value instanceof Date;
   },
 
-  isRegExp(value: any): boolean {
+  regExp(value: any): boolean {
     return value instanceof RegExp;
   },
 
-  isFunction(value: any): boolean {
+  function(value: any): boolean {
     return typeof value === 'function';
   },
 
-  isObject(value: any): boolean {
+  object(value: any): boolean {
     return value && typeof value === "object" && value.toString() === "[object Object]";
   },
 
-  isArray(value: any): boolean {
+  array(value: any): boolean {
     return Array.isArray(value);
   },
 
-  isArrayOf(type: string, value: any[]): boolean {
+  arrayOf(type: string, value: any[]): boolean {
     let lng = type.length;
 
     if (type.charAt(lng - 1) === 's')
       type = type.slice(0, lng - 1);
 
     if (this.isValidType(type) && Array.isArray(value))
-      return value.every((entry: any) => (<any>this)[`is${capitalizeFirst(type)}`](entry));
+      return value.every((entry: any) => (<any>this)[capitalizeFirst(type)](entry));
 
     return false;
   },
@@ -109,7 +109,7 @@ export const Types = {
         if (this.isArrayOf(typesList[i], value))
           types.push(typesList[i] + '[]');
 
-      if (Types.isObject(value[0])) {
+      if (Types.object(value[0])) {
         types.push(value[0].constructor.name + '[]');
         types.push('object[]');
       }
