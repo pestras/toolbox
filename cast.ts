@@ -21,7 +21,7 @@ export function cast(val: any, type: 'boolean' | 'string' | 'number' | 'date' | 
   }
 
   if (type === 'string') {
-    if (Types.primitive(val) || Types.date(val) || Types.regExp(val) || Types.function(val))
+    if (Types.primitive(val) || Types.date(val) || Types.regexp(val) || Types.function(val))
       return "" + val;
     else if (Types.object(val) || Array.isArray(val))
       return JSON.stringify(val);
@@ -47,7 +47,7 @@ export function cast(val: any, type: 'boolean' | 'string' | 'number' | 'date' | 
     if (Types.primitive(val))
       return new RegExp(val);
 
-    if (Types.regExp(val))
+    if (Types.regexp(val))
       return val;
 
     throw "can't cast value to a regexp!";

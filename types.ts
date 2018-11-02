@@ -67,7 +67,7 @@ export const Types = {
     return value instanceof Date;
   },
 
-  regExp(value: any): boolean {
+  regexp(value: any): boolean {
     return value instanceof RegExp;
   },
 
@@ -107,7 +107,7 @@ export const Types = {
         if (this.isArrayOf(typesList[i], value))
           types.push(typesList[i] + '[]');
 
-      if (Types.object(value[0])) {
+      if (this.object(value[0])) {
         types.push(value[0].constructor.name + '[]');
         types.push('object[]');
       }
