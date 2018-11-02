@@ -1,6 +1,6 @@
 {
   "name": "tools-box",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "JavaScript utility and helper functions",
   "main": "index.js",
   "types": "index.d.ts",

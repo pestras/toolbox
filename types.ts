@@ -1,5 +1,3 @@
-import { capitalizeFirst } from "./string/capitalize-first";
-
 const typesMap = {
   list: [Number, Boolean, String, Date, RegExp, Object, Array, Function],
   values: ['number', 'boolean', 'string', 'date', 'regexp', 'object', 'array', 'function']
@@ -92,7 +90,7 @@ export const Types = {
       type = type.slice(0, lng - 1);
 
     if (this.isValidType(type) && Array.isArray(value))
-      return value.every((entry: any) => (<any>this)[capitalizeFirst(type)](entry));
+      return value.every((entry: any) => (<any>this)[type](entry));
 
     return false;
   },
@@ -101,7 +99,7 @@ export const Types = {
     let types = ['any'];
     if (!Array.isArray(value)) {
       for (let i = 0; i < typesList.length; i++)
-        if ((<any>this)[capitalizeFirst(typesList[i])](value))
+        if ((<any>this)[typesList[i]](value))
           types.push(typesList[i]);
     } else {
       types.push('array', 'any[]');
