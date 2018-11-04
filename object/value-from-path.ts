@@ -7,7 +7,7 @@ export function valuefromPath(src: any, path: string, newValue?: any, inject?: b
   let parts = cleanPropPath(path).split('.');
 
   if (parts.length === 1) {
-    if (!newValue) {
+    if (newValue === undefined) {
       return src[path];
     } else if (inject || src.hasOwnProperty(path)) {
       if (typeof newValue === "function")
