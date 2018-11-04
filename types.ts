@@ -104,7 +104,7 @@ export const Types = {
     } else {
       types.push('array', 'any[]');
       for (let i = 0; i < typesList.length; i++)
-        if (this.isArrayOf(typesList[i], value))
+        if (this.arrayOf(typesList[i], value))
           types.push(typesList[i] + '[]');
 
       if (this.object(value[0])) {

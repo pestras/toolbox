@@ -10,7 +10,7 @@ export function cast(val: any, type: 'boolean' | 'string' | 'number' | 'date' | 
     if (Types.primitive(val)) {
       val = +val;
 
-      if (val === NaN)
+      if (isNaN(val))
         throw "can't cast NaN to number!";
 
       return val;
