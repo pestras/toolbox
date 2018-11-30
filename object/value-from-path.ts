@@ -28,7 +28,7 @@ export function valuefromPath(src: any, path: string, newValue?: any, inject?: b
       return undefined;
 
   if (Array.isArray(src[currentField])) {
-    if (Number(parts[0])) {
+    if (!isNaN(Number(parts[0]))) {
       if (parts.length === 1)
         return valuefromPath(src[currentField], parts[0], newValue, inject);
       else
