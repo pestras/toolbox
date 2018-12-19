@@ -1,5 +1,4 @@
 .vscode
-test.*
 node_modules
 /tsconfig.json
 npm-debug.log
@@ -7,3 +6,4 @@ npm-debug.log
 !*.d.ts
 *.map.js
 TODO.md
+/test

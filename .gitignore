@@ -4,5 +4,5 @@ npm-debug.log
 *.js
 *.js.map
 *.d.ts
-test.*
+/test
 TODO.md

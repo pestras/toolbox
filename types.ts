@@ -3,7 +3,7 @@ const typesMap = {
   values: ['number', 'boolean', 'string', 'date', 'regexp', 'object', 'array', 'function']
 };
 
-const typesList = ['number', 'int', 'float', 'string', 'boolean', 'primitive', 'date', 'regexp', 'function', 'object', 'array'];
+const typesList = ['number', 'int', 'float', 'string', 'boolean', 'primitive', 'date', 'regexp', 'function', 'object', 'array', 'any'];
 // 'number[]', 'int[]', 'float[]', 'string[]', 'boolean[]', 'primitive[]', 'date[]', 'regexp[]', 'function[]', 'object[]', 'array', 'any'
 
 function searchMap(value: any) {
