@@ -83,6 +83,8 @@ export const Types = {
     return Array.isArray(value);
   },
 
+  any(): boolean { return true; },
+
   arrayOf(type: string, value: any[]): boolean {
     let lng = type.length;
 
@@ -96,7 +98,7 @@ export const Types = {
   },
 
   getTypesOf(value: any): string[] {
-    let types = ['any'];
+    let types = [];
     if (!Array.isArray(value)) {
       for (let i = 0; i < typesList.length; i++)
         if ((<any>this)[typesList[i]](value))
