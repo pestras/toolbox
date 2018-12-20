@@ -1,6 +1,7 @@
 import { URL as RootURL } from 'url';
 import { parse } from './object/parse';
 import { stringify } from './string/stringify';
+import { strSplice } from './string/str-splice';
 
 function cleanParam(param: string): string {
   param = param.slice(1);
@@ -43,11 +44,11 @@ export class PathPattern {
   }
 
   get params(): string[] {
-    return this._params.map(param => param.slice(1));
+    return this._outputParams;
   }
 
   get pattern(): string {
-    return this.pattern;
+    return this._pattern;
   }
 
   set pattern(value: string) {
@@ -101,7 +102,7 @@ export class PathPattern {
     return paramsObj;
   }
 
-  pathFromParamsObj(paramsObj: { [key: string]: string }) {
+  pathFromParamsObj(paramsObj: { [key: string]: string | number }) {
     let path = '';
 
     for (let i = 0; i < this._parts.length; i++) {
@@ -112,7 +113,7 @@ export class PathPattern {
         param = cleanParam(this._parts[i]);
 
         if (paramsObj.hasOwnProperty(param)) {
-          path += paramsObj[param];
+          path += paramsObj[param] || '';
         } else if (!isOptional) {
           return null;
         } else {
@@ -121,7 +122,7 @@ export class PathPattern {
 
       } else if (this._parts[i] === '*') {
         if (paramsObj.hasOwnProperty('*'))
-          path += paramsObj['*'];
+          path += paramsObj['*'] || '';
 
         return PathPattern.Clean(path);
 
@@ -137,7 +138,7 @@ export class PathPattern {
 export class URL extends RootURL {
   queryObject: any;
   private _pathPattern: PathPattern;
-  private _paramsObj: {[key: string]: string}
+  private _paramsObj: {[key: string]: string | number};
 
   constructor(href: string, base?: string | RootURL) {
     super(href, base);
@@ -188,14 +189,14 @@ export class URL extends RootURL {
     return path;
   }
 
-  static From(origin: string, pathname?: { pattern: string, params: { [key: string]: string } } | string, searchObj?: any, hash?: string): URL {
+  static From(origin: string, pathname?: { pattern: string, params?: { [key: string]: string } } | string, searchObj?: any, hash?: string): URL {
     let url = new URL(origin);
     if (pathname) {
       if (typeof pathname === 'string')
         url.pathname = pathname;
       else {
         url.pathPattern = pathname.pattern;
-        url.pathnameFromParamsObj = pathname.params;
+        pathname.params ? url.pathParmsObj = pathname.params : url.pathname = '/';
       }
     }
 
@@ -218,46 +219,59 @@ export class URL extends RootURL {
     }
   }
 
-  set pathnameFromParamsObj(value: { [key: string]: string }) {
+  get pathname(): string {
+    return super.pathname;
+  }
+
+  get pathPattern(): string {
+    return this._pathPattern.pattern;
+  }
+
+  set pathPattern(value: string) {
+    let pp = new PathPattern(value);
+    if (super.pathname !== '/' && pp.match(super.pathname))
+      throw 'invalid existing pathname';
+
+    this._pathPattern = pp;
+
+    if (super.pathname === '/') {
+      this._paramsObj = {};
+
+      for (let key of this._pathPattern.params)
+        this._paramsObj[key] = null;
+        
+    } else {
+      this._paramsObj = this._pathPattern.getParamsObj(super.pathname);
+    }
+  }
+
+  get pathParmsObj(): { [key: string]: string | number } {
+    return this._paramsObj || null;
+  }
+
+  set pathParmsObj(value: { [key: string]: string | number }) {
     if (this._pathPattern) {
       super.pathname = this._pathPattern.pathFromParamsObj(value);
       this._paramsObj = value;
     }
   }
 
-  set pathPattern(value: string) {
-    let pp = new PathPattern(value);
-    this._pathPattern = new PathPattern(value);
-
-    if (this.pathname !== '/' && pp.match(this.pathname))
-      throw 'invalid existing pathname';
-
-    this._paramsObj = this._pathPattern.getParamsObj(this.pathname);
-  }
-
-  get pathParmsObj(): { [key: string]: string } {
-    if (this._pathPattern)
-      return this._pathPattern.getParamsObj(this.pathname);
-
-    return null;
-  }
-
-  setPathParam(key: string, value: string) {
-    if (!this._paramsObj.hasOwnProperty(key))
+  setPathParam(key: string, value: string | number) {
+    if (!this._paramsObj || (!this._paramsObj.hasOwnProperty(key) && key !== '*'))
       return;
 
     this._paramsObj[key] = value;
-    this.pathnameFromParamsObj = this._paramsObj;
+    this.pathParmsObj = this._paramsObj;
   }
 
   isSecure(): boolean {
-    return this.protocol.charAt(this.protocol.length - 1) === 's';
+    return this.protocol.charAt(this.protocol.length - 2) === 's';
   }
 
   secure(enable: boolean = true) {
     if (enable && !this.isSecure())
-      this.protocol = this.protocol + 's';
+      this.protocol = strSplice(this.protocol, this.protocol.length - 1, 0, 's');
     else if (!enable && this.isSecure())
-      this.protocol = this.protocol.slice(0, this.protocol.length - 1);
+      this.protocol = strSplice(this.protocol, this.protocol.length - 2, 1);
   }
 }
