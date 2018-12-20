@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/ammar6885/tools-box#readme",
   "dependencies": {
-    "@types/node": "^10.5.1",
-    "crypto": "^1.0.1"
+    "@types/node": "^10.5.1"
   }
 }
