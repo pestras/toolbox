@@ -2,19 +2,19 @@ import { IObject } from "./";
 
 export function getOwnPropList(src: IObject | any[], propName: string, path?: string): {[key: string]: any } {
   let result: any = {};
-  path = path ? path + '.' : '';
 
   if (!src)
     return null;
 
   if (typeof src === "object") {
     if (src.hasOwnProperty(propName))
-      result[path + propName] = (<IObject>src)[propName];
+      result[path ? path + propName : propName] = (<IObject>src)[propName];
 
     if (Array.isArray(src)) {
       for (let i = 0; i < src.length; i++) {
         if (typeof src[i] === "object") {
-          let subResults = getOwnPropList(src[i], propName, path + i);
+          let currPath = path ? `${path}[${i}]` : `[${i}]`;
+          let subResults = getOwnPropList(src[i], propName, currPath);
           if (subResults && Object.keys(subResults).length)
             Object.assign(result, subResults);
         }          
@@ -23,7 +23,8 @@ export function getOwnPropList(src: IObject | any[], propName: string, path?: st
     } else {
       for (let prop in src) {
         if (typeof src[prop] === "object") {
-          let subResults = getOwnPropList(src[prop], propName, path + prop);
+          let currPath = path ? `${path}.${prop}` : prop;
+          let subResults = getOwnPropList(src[prop], propName, currPath);
           if (subResults && Object.keys(subResults).length)
             Object.assign(result, subResults);
         }          

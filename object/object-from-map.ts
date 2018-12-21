@@ -32,6 +32,7 @@ export function objFromMap(src: any, target: any = {}, map: any) {
       }
 
     } else {
+      target = target || {};
 
       for (let prop in map) {
         injectValue(target, prop, objFromMap(src, null, map[prop]));

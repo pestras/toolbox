@@ -1,5 +1,7 @@
-export function unify(arr1: any[], arr2: any[], base?: string): any[] {
-  let arr3 = [...arr2];
+import { getSet } from "./get-set";
+
+export function unify(arr1: any[], arr2: any[], base?: string, set?: boolean): any[] {
+  let result = [...arr2];
   let inn: boolean;
 
   for (let i = 0; i < arr1.length; i++) {
@@ -17,12 +19,12 @@ export function unify(arr1: any[], arr2: any[], base?: string): any[] {
     }
 
     if (!inn) {
-      arr3.push(arr1[i]);
+      result.push(arr1[i]);
       continue;
     }
 
     inn = false;
   }
 
-  return arr3;
+  return set ? getSet(result) : result;
 }

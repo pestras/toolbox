@@ -13,6 +13,10 @@ export function omit(obj: IObject, props: string[]): any {
     let temp = obj;
     for (let j = 0; j < path.length; j++) {
       temp = temp[path[j]];
+
+      if (!temp)
+        break;
+        
       if (j === path.length - 2) {
         delete temp[path[j + 1]];
         break;

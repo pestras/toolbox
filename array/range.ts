@@ -1,5 +1,12 @@
-export function range(start: number, end: number, step?: number) {
+export function range(start: number, end?: number, step?: number) {
   let result: number[] = [];
+
+  if (start > 0 && end === undefined) {
+    for (let i = 0; i <= start; i++)
+      result.push(i);
+    
+    return result;
+  }
 
   if ((start !== 0 && !start) || (end !== 0 && !end))
     return result;
