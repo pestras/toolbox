@@ -4,7 +4,7 @@ import { injectValue } from "./inject-value";
 export function objFromMap(src: any, target: any = {}, map: any) {
 
   if (!map)
-    return null;
+    return map;
 
   if (typeof map === 'object') {
     let value;
