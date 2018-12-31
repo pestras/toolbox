@@ -1,7 +1,7 @@
 import { getValue } from './get-value';
 import { injectValue } from "./inject-value";
 
-export function objFromMap(src: any, target: any = {}, map: any) {
+export function objFromMap(src: any, target: any = {}, map: any, ignoreKeys = false) {
 
   if (!map)
     return map;
@@ -24,7 +24,7 @@ export function objFromMap(src: any, target: any = {}, map: any) {
             target.push(...value);
 
         } else {
-          value = objFromMap(src, null, prop);
+          value = objFromMap(src, null, prop, ignoreKeys);
 
           if (value !== undefined)
             target.push(value);
@@ -35,7 +35,7 @@ export function objFromMap(src: any, target: any = {}, map: any) {
       target = target || {};
 
       for (let prop in map) {
-        injectValue(target, prop, objFromMap(src, null, map[prop]));
+        ignoreKeys ? target[prop] = objFromMap(src, null, map[prop], ignoreKeys) : injectValue(target, prop, objFromMap(src, null, map[prop], ignoreKeys));
       }
     }
 
