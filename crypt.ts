@@ -1,6 +1,6 @@
 import * as crypto from 'crypto';
 
-export function hash(src: string, salt?: string): Promise<string | [string, string]> {
+export function hash(src: string, salt?: string): Promise<[string, string]> {
   const len = 64;
   const iterations = 10000;
   const digest = 'sha256';
@@ -11,7 +11,7 @@ export function hash(src: string, salt?: string): Promise<string | [string, stri
         if (err)
           return reject(err);
 
-        resolve(derivedKey.toString('base64'));
+        resolve([derivedKey.toString('base64'), salt]);
       });
 
     } else {
@@ -35,7 +35,7 @@ export function verify(src: string, hashed: string, salt: string): Promise<boole
   return new Promise((resolve, reject) => {
     hash(src, salt)
       .then(hashedSrc => {
-        resolve(hashedSrc === hashed);
+        resolve(hashedSrc[0] === hashed);
       })
       .catch(err => reject(err));
   });
