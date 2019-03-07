@@ -15,16 +15,16 @@ export function objFromMap(src: any, target: any = {}, map: any, ignoreKeys = fa
       if (map.length === 0)
         return [];
 
-      for (let prop of map) {
+      for (let i = 0; i < map.length; i ++) {
 
-        if (prop.indexOf('.$') === 0) {
-          value = getValue(src, prop.slice(2));
+        if (typeof map[i] === 'string' && map[i].indexOf('.$') === 0) {
+          value = getValue(src, map[i].slice(2));
 
           if (Array.isArray(value) && value.length)
             target.push(...value);
 
         } else {
-          value = objFromMap(src, null, prop, ignoreKeys);
+          value = objFromMap(src, null, map[i], ignoreKeys);
 
           if (value !== undefined)
             target.push(value);
@@ -32,10 +32,15 @@ export function objFromMap(src: any, target: any = {}, map: any, ignoreKeys = fa
       }
 
     } else {
-      target = target || {};
+      if (map.constructor.name !== 'Object') {
+        target = map;
 
-      for (let prop in map) {
-        ignoreKeys ? target[prop] = objFromMap(src, null, map[prop], ignoreKeys) : injectValue(target, prop, objFromMap(src, null, map[prop], ignoreKeys));
+       } else {
+        target = target || {};  
+  
+        for (let prop in map)    
+          ignoreKeys ? target[prop] = objFromMap(src, null, map[prop], ignoreKeys) : injectValue(target, prop, objFromMap(src, null, map[prop], ignoreKeys));
+        
       }
     }
 
