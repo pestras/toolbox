@@ -2,11 +2,9 @@ import { cleanPropPath } from "./clean-prop-path";
 
 export function valuefromPath(src: any, path: string, newValue?: any, inject?: boolean): any {
   if (typeof src !== "object")
-    return src;
+    return undefined;
 
   let parts = cleanPropPath(path).split('.');
-
-  console.log(parts);
 
   if (parts.length === 1) {
     if (newValue === undefined) {
@@ -30,23 +28,14 @@ export function valuefromPath(src: any, path: string, newValue?: any, inject?: b
       return undefined;
 
   if (Array.isArray(src[currentField])) {
-    
-    if (!isNaN(Number(parts[0]))) {
-      if (parts.length === 1)
-        return valuefromPath(src[currentField], parts[0], newValue, inject);
-      else
-        return valuefromPath(src[currentField][Number(parts[0])], parts.slice(1).join('.'), newValue, inject);
-    }
 
     if (parts.length === 1)
-      return src[currentField][parts[0]] || undefined;
+      return valuefromPath(src[currentField], parts[0], newValue, inject);
 
-    let results = [];
+    if (!isNaN(Number(parts[0])))
+      return valuefromPath(src[currentField][Number(parts[0])], parts.slice(1).join('.'), newValue, inject);
 
-    for (let i = 0; i < src[currentField].length; i++)
-      results.push(valuefromPath(src[currentField][i], parts.join('.'), newValue, inject));
-
-    return results;
+      return valuefromPath(src[currentField], parts.join('.'), newValue, inject);
   }
 
   return valuefromPath(src[currentField], parts.join('.'), newValue, inject);
