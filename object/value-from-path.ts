@@ -6,6 +6,8 @@ export function valuefromPath(src: any, path: string, newValue?: any, inject?: b
 
   let parts = cleanPropPath(path).split('.');
 
+  console.log(parts);
+
   if (parts.length === 1) {
     if (newValue === undefined) {
       return src[path];
@@ -28,12 +30,16 @@ export function valuefromPath(src: any, path: string, newValue?: any, inject?: b
       return undefined;
 
   if (Array.isArray(src[currentField])) {
+    
     if (!isNaN(Number(parts[0]))) {
       if (parts.length === 1)
         return valuefromPath(src[currentField], parts[0], newValue, inject);
       else
         return valuefromPath(src[currentField][Number(parts[0])], parts.slice(1).join('.'), newValue, inject);
     }
+
+    if (parts.length === 1)
+      return src[currentField][parts[0]] || undefined;
 
     let results = [];
 
