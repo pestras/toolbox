@@ -32,7 +32,7 @@ export default function fetch(options: IFetchOptions): Promise<{statusCode: numb
       let timer: NodeJS.Timer;
   
       if (data)
-        headers['Content-Length'] = Buffer.byteLength(data);   
+        headers['Content-Length'] = Buffer.byteLength(data); 
   
       let req = (<typeof http>provider).request({
         hostname: url.hostname,
