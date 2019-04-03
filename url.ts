@@ -37,7 +37,7 @@ export class PathPattern {
 
   private init() {
     this._params = /:[a-z]\w*/g.exec(this._pattern);
-    this._outputParams = this._params.map(param => cleanParam(param));
+    this._outputParams = this._params ? this._params.map(param => cleanParam(param)) : [];
     this._parts = this._pattern.split('/');
     this._hasRest = this._pattern.charAt(this._pattern.length - 1) === '*';
     this._hasOptional = this._pattern.charAt(this._pattern.length - 1) === '?';
@@ -75,7 +75,6 @@ export class PathPattern {
       if (this._parts[i].charAt(0) !== ':' && this._parts[i] !== '*') {
         if (this._parts[i] !== pathParts[i])
           return false;
-
       }
     }
 
