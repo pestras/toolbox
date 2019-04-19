@@ -24,7 +24,7 @@ export default function fetch(options: IFetchOptions): Promise<{statusCode: numb
       let resData = "";
       let url = URL.parse(options.url);  
       let provider = url.protocol.charAt(url.protocol.length - 2) === 's' ? https : http;   
-      let data = options.data ? JSON.stringify(options.data) : null;
+      let data = options.data ? JSON.stringify(options.data) : '';
       let method = options.method ? options.method.toUpperCase() : 'GET';
       let headers: { [keys: string]: string | number } = options.headers ? Object.assign(Object.assign({}, defaultHeaders), options.headers) : defaultHeaders;
       let wait = options.wait === false ? false : true;
