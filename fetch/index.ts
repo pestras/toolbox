@@ -43,7 +43,7 @@ export default function fetch(options: IFetchOptions): Promise<{statusCode: numb
       }, (response: http.IncomingMessage) => {
         
         if (!wait)
-          return;
+          return resolve({ statusCode: CODES.OK, data: true });
 
         let statusCode = response.statusCode;
   
