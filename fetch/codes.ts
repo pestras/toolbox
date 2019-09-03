@@ -44,7 +44,7 @@ export enum CODES {
   // Client Errors Responses
   //-----------------------------------------------------
   /**
-   * The server cannot or will not process the request due to an apparent client error
+   * The server cannot or will not process the request due to an apparent client error as invalid input type format.
    */
   BAD_REQUEST = 400,
   /**
@@ -105,11 +105,15 @@ export enum CODES {
    */
   EXPECTATION_FAILED = 417,
   /**
+   * The server cannot or will not process the request due to an apparent client error as invalid input values.
+   */
+  BAD_PARAMS = 422,
+  /**
    * The 423 (Locked) status code means the source or destination resource of a method is locked.
    * This response SHOULD contain an appropriate precondition or postcondition code, 
    * such as 'lock-token-submitted' or 'no-conflicting-lock'.
    */
-  LOCKED = 423,
+  LOCKED,
   /**
    * The server is unwilling to process the request because either an individual header field, 
    * or all the header fields collectively, are too large.
