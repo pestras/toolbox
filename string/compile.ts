@@ -6,7 +6,7 @@ export function compile(template: string, data: { [key: string]: any }): string 
     match = match;
 
     if (parts.length == 1)
-      return data[parts[0]] || "";
+      return data[parts[0]];
 
     temp = data[parts[0]];
 
