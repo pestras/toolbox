@@ -223,12 +223,12 @@ export class URL extends RootURL {
   }
 
   get pathPattern(): string {
-    return this._pathPattern.pattern;
+    return this._pathPattern ? this._pathPattern.pattern : null;
   }
 
   set pathPattern(value: string) {
     let pp = new PathPattern(value);
-    if (super.pathname !== '/' && pp.match(super.pathname))
+    if (super.pathname !== '/' && !pp.match(super.pathname))
       throw 'invalid existing pathname';
 
     this._pathPattern = pp;
