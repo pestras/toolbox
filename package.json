@@ -1,6 +1,6 @@
 {
   "name": "@pestras/toolbox",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "JavaScript utility and helper functions",
   "main": "index.js",
   "types": "index.d.ts",

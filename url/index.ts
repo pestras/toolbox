@@ -12,13 +12,13 @@ function cleanParam(param: string): string {
 }
 
 export class URL extends RootURL {
-  queryObject: any;
+  query: any;
   private _pathPattern: PathPattern;
 
   constructor(href: string, base?: string | RootURL) {
     super(href, base);
 
-    this.queryObject = this.search ? URL.QueryToObject(this.search.slice(1)) : {};
+    this.query = this.search ? URL.QueryToObject(this.search.slice(1)) : {};
   }
 
   static QueryToObject(query: string): any {
