@@ -1,6 +1,6 @@
 {
   "name": "@pestras/toolbox",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "JavaScript utility and helper functions",
   "main": "index.js",
   "types": "index.d.ts",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ammar6885/tools-box.git"
+    "url": "git+https://github.com/pestras/toolbox.git"
   },
   "keywords": [
     "JavaScript",
@@ -24,9 +24,9 @@
   },
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ammar6885/tools-box/issues"
+    "url": "https://github.com/pestras/toolbox/issues"
   },
-  "homepage": "https://github.com/ammar6885/tools-box#readme",
+  "homepage": "https://github.com/pestras/toolbox#readme",
   "dependencies": {},
   "devDependencies": {
     "@types/node": "^13.13.5"
