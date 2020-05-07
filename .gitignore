@@ -6,3 +6,4 @@ npm-debug.log
 *.d.ts
 /test
 TODO.md
+packege-lock.json

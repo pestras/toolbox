@@ -1,6 +1,6 @@
 {
-  "name": "tools-box",
-  "version": "0.1.34",
+  "name": "@pestras/toolbox",
+  "version": "0.0.1",
   "description": "JavaScript utility and helper functions",
   "main": "index.js",
   "types": "index.d.ts",
@@ -27,7 +27,8 @@
     "url": "https://github.com/ammar6885/tools-box/issues"
   },
   "homepage": "https://github.com/ammar6885/tools-box#readme",
-  "dependencies": {
-    "@types/node": "^10.5.1"
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^13.13.5"
   }
 }
