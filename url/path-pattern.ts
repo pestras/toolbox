@@ -99,7 +99,7 @@ export class PathPattern {
       let part = this._parts[i];
 
       if (!part.isParam) {
-        if (part.text !== pathParts[i]) return false;
+        if (part.text.toLowerCase() !== pathParts[i].toLowerCase()) return false;
 
       } else {
         if (part.isRest) {
