@@ -18,7 +18,9 @@ export interface IFetchOptions {
   timeout?: number;
 }
 
-export default function fetch(options: IFetchOptions): Promise<{statusCode: number, data: any }> {
+export { CODES };
+
+export function fetch(options: IFetchOptions): Promise<{statusCode: number, data: any }> {
   return new Promise((resolve, reject) => {
     
       let resData = "";
@@ -55,9 +57,9 @@ export default function fetch(options: IFetchOptions): Promise<{statusCode: numb
           clearTimeout(timer);
           if (statusCode >= 200 && statusCode < 300) {
             if (headers && headers.Accept === 'application/json')
-              resolve({ statusCode: statusCode, data: JSON.parse(resData)});
+              resolve({ statusCode: statusCode, data: resData ? JSON.parse(resData) : resData });
             else
-              resolve({ statusCode: statusCode, data: resData});
+              resolve({ statusCode: statusCode, data: resData });
   
           } else {
             reject({ statusCode, error: JSON.parse(resData) });
