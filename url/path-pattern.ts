@@ -12,7 +12,7 @@ export class PathPattern {
   private _hasRest = false;
   private _hasOptionalRest = false;
   private _optionalsCount = 0;
-  private _values: { [key: string]: string } = {};
+  private _values: { [key: string]: string | string[] } = {};
 
   constructor(pattern: string) {
     this._pattern = PathPattern.Clean(pattern);
@@ -72,7 +72,7 @@ export class PathPattern {
     }
   }
 
-  get params(): { [key: string]: string } { return Object.assign({}, this._values); }
+  get params(): { [key: string]: string | string[] } { return Object.assign({}, this._values); }
   get pattern(): string { return this._pattern; }
 
   set pattern(value: string) {
@@ -103,7 +103,7 @@ export class PathPattern {
 
       } else {
         if (part.isRest) {
-          this._values[part.text] = pathParts.slice(i).join('/') || null;
+          this._values[part.text] = pathParts.slice(i) || null;
 
         } else {
           let value = pathParts[i] || null;
@@ -117,20 +117,27 @@ export class PathPattern {
     return true;
   }
 
-  pathFromParams(params: { [key: string]: string }): string {
+  pathFromParams(params: { [key: string]: string | string[] }): string {
     let path = "/";
 
     for (let part of this._parts) {
-      if (!part.isParam) path += part.text + '/';
-      else {
+      if (!part.isParam) {
+        path += part.text + '/';
+      } else {
         if (part.isRest) {
           let value = params[part.text];
-          if (!value && !part.isOptional) throw 'rest is required';
-          path += params[part.text] || '';
+          if (!part.isOptional) {
+            if (!value) throw 'rest is required';
+            else if (Array.isArray(value) && value.length === 0) throw 'rest is required';
+          }
+          let rest = Array.isArray(value) ? value.join('/') : value;
+          path += rest || '';
           
         } else {
           let value = params[part.text];
 
+          if (Array.isArray(value)) throw 'param could not be assigned to array value';
+          
           if (!value && !part.isOptional) throw `${part.text} param is required`;
 
           if (value && part.regex)

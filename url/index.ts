@@ -117,11 +117,11 @@ export class URL extends RootURL {
     this._pathPattern = pp;
   }
 
-  get params(): { [key: string]: string } {
+  get params(): { [key: string]: string | string[] } {
     return this._pathPattern ? this._pathPattern.params : {};
   }
 
-  set params(value: { [key: string]: string }) {
+  set params(value: { [key: string]: string | string[] }) {
     if (this._pathPattern) {
       let params = this.params;
       Object.assign(params, value);
