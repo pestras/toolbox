@@ -4,8 +4,11 @@ export function valuefromPath(src: any, path: string, newValue?: any, inject?: b
   if (typeof src !== "object")
     return undefined;
 
+
   let parts = cleanPropPath(path).split('.');
   let currentField = parts.shift();
+
+  if (!src) return parts.length > 0 ? undefined : src;
 
   if (currentField === '$') {
 
@@ -55,7 +58,7 @@ export function valuefromPath(src: any, path: string, newValue?: any, inject?: b
 
 function handleAnonymousArrayIndex(src: any[], path: string, newValue: any, inject: boolean) {
   let result: any[] = [];
-  
+
   for (let i = 0; i < src.length; i++) {
     if (!path) {
       if (newValue)
