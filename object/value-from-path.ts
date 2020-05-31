@@ -8,7 +8,7 @@ export function valuefromPath(src: any, path: string, newValue?: any, inject?: b
   let parts = cleanPropPath(path).split('.');
   let currentField = parts.shift();
 
-  if (!src) return parts.length > 0 ? undefined : src;
+  if (!src) return undefined;
 
   if (currentField === '$') {
 
