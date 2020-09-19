@@ -8,7 +8,7 @@ export function parse(str: string): any {
   if (str === 'true') return true;
   if (str === 'false') return false;
 
-  if (str.charAt(0) === '/') {
+  if (str.charAt(0) === '/' && /\/[g|i|s|m|u]*$/.test(str)) {
     let parts = decodeURI(str).split('/');
     let flags = parts.pop();
     str = parts.join('/').replace(/^\/|\/$/g, '');
