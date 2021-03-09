@@ -4,20 +4,12 @@ import { stringify } from '../string/stringify';
 import { strSplice } from '../string/str-splice';
 import { PathPattern } from './path-pattern';
 
-function cleanParam(param: string): string {
-  param = param.slice(1);
-  if (param.charAt(param.length - 1) === '?')
-    param = param.slice(0, param.length - 1);
-  return param;
-}
-
 export class URL extends RootURL {
   query: any;
   private _pathPattern: PathPattern;
 
   constructor(href: string, base?: string | RootURL) {
     super(href, base);
-
     this.query = this.search ? URL.QueryToObject(this.search.slice(1)) : {};
   }
 
@@ -68,13 +60,13 @@ export class URL extends RootURL {
     let url = new URL(origin);
     if (pathname) {
       if (typeof pathname === 'string')
-        url.pathname = pathname;
+        url.setPathname(pathname);
       else {
         let pathPattern = new PathPattern(pathname.pattern);
         let path = pathPattern.pathFromParams(pathname.params);
 
         if (pathPattern.match(path)) {
-          url.pathname = path;
+          url.setPathname(path);
           url._pathPattern = pathPattern;
         }
       }
@@ -88,21 +80,6 @@ export class URL extends RootURL {
       url.hash = hash;
 
     return url;
-  }
-
-  set pathname(value: string) {
-    value = PathPattern.Clean(value);
-
-    if (this._pathPattern) {
-      if (this._pathPattern.match(value))
-        super.pathname = '/' + value;
-    } else {
-      super.pathname = '/' + value;
-    }
-  }
-
-  get pathname(): string {
-    return super.pathname;
   }
 
   get pathPattern(): string {
@@ -125,8 +102,23 @@ export class URL extends RootURL {
     if (this._pathPattern) {
       let params = this.params;
       Object.assign(params, value);
-      super.pathname = this._pathPattern.pathFromParams(value);
+      this.pathname = this._pathPattern.pathFromParams(value);
     }
+  }
+
+  setPathname(value: string) {
+    value = PathPattern.Clean(value);
+    
+    if (this._pathPattern) {
+      if (this._pathPattern.match(value))
+        this.pathname = '/' + value;
+    } else {
+      this.pathname = '/' + value;
+    }
+  }
+
+  getPathname(): string {
+    return this.pathname;
   }
 
   setPathParam(key: string, value: string) {
