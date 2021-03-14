@@ -44,6 +44,7 @@ export class PathPattern {
       let pathPart = <PathPart>{ text: part };
 
       if (part.charAt(0) === '*') {
+        pathPart.text = "*";
         if (this._optionalsCount > 0) throw 'invalidPathPattern';
         pathPart.isParam = true;
         pathPart.isRest = true;
