@@ -1,12 +1,14 @@
-export function compile(template: string, data: { [key: string]: any }): string {
+export function compile(template: string, data: { [key: string]: any }, skip = false): string {
   let reg = /\{\{\s*([\w\.]+)\s*\}\}/g;
 
   return template.replace(reg, (match: string, $1: string): string => {
     let parts = $1.split("."), temp: any;
     match = match;
 
-    if (parts.length == 1)
-      return data[parts[0]];
+    if (parts.length == 1) {
+      let value = data[parts[0]];
+      return value === undefined ? (skip ? `{{${$1}}}` : "") : value;
+    }
 
     temp = data[parts[0]];
 
@@ -14,6 +16,6 @@ export function compile(template: string, data: { [key: string]: any }): string 
       temp = temp[parts[i]];
     }
 
-    return temp || "";
+    return temp === undefined ? (skip ? `{{${$1}}}` : "") : temp;
   });
 }

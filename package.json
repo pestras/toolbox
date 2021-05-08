@@ -1,6 +1,6 @@
 {
   "name": "@pestras/toolbox",
-  "version": "1.1.11",
+  "version": "1.1.12",
   "description": "JavaScript utility and helper functions",
   "main": "index.js",
   "types": "index.d.ts",
@@ -27,8 +27,8 @@
     "url": "https://github.com/pestras/toolbox/issues"
   },
   "homepage": "https://github.com/pestras/toolbox#readme",
-  "dependencies": {},
   "devDependencies": {
-    "@types/node": "^13.13.5"
+    "@types/node": "^13.13.5",
+    "typescript": "^4.2.4"
   }
 }
