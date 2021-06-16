@@ -1,7 +1,6 @@
 import { Types } from "./types";
 
 export function cast(val: any, type: 'boolean' | 'string' | 'number' | 'date' | 'regexp' | 'array'): boolean | string | number | Date | RegExp | any[] {
-  let valueType = Types.getTypesOf(val);
 
   if (type === 'boolean')
     return !!val;

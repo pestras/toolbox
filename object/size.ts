@@ -1,6 +1,8 @@
 import { IObject } from "./";
 
 export function size(obj: IObject): number {
+  if (!obj) return 0;
+  
   if (Object.keys)
     return Object.keys(obj).length;
 

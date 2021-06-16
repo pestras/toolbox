@@ -1,8 +1,6 @@
 import { IObject } from "./";
 import { cleanPropPath } from "./clean-prop-path";
 
-// export function getValue(obj: IObject, path: string) { return valuefromPath(obj, path); }
-
 export function getValue(src: IObject, path = ""): any { 
   let parts = cleanPropPath(path).split('.');
   let currentField = parts.shift();

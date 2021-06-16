@@ -1,6 +1,3 @@
-import { getValue } from "./object/get-value";
-import { setValue } from "./object/set-value";
-
 export enum CLI_VALUE_TYPE {
   BOOL = 0,
   STRING,
