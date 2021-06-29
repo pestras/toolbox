@@ -1,27 +1,13 @@
-import { IObject } from "./";
-
-export function hasOwnDeepProp(src: IObject | any[], propName: string): boolean {
-  if (!src)
+export function hasOwnDeepProp(src: any, prop: string): boolean {
+  if (typeof src !== "object" || src === null)
     return false;
 
-  if (typeof src === "object") {
-    if (src.hasOwnProperty(propName))
+  if (src[prop] !== undefined)
+    return true;
+
+  for (let key in src) {
+    if (hasOwnDeepProp(src[key], prop))
       return true;
-
-    if (Array.isArray(src)) {
-      for (let i = 0; i < src.length; i++) {
-        if (typeof src[i] === "object")
-          if (hasOwnDeepProp(src[i], propName))
-            return true;
-      }
-
-    } else {
-      for (let prop in src) {  
-        if (typeof src[prop] === "object")
-          if (hasOwnDeepProp(src[prop], propName))
-            return true;
-      }
-    }
   }
 
   return false;
