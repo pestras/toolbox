@@ -20,7 +20,7 @@ export interface IFetchOptions {
 
 export { CODES };
 
-export function fetch(options: IFetchOptions): Promise<{ statusCode: number, data: any }> {
+export function fetch<T = any>(options: IFetchOptions): Promise<{ statusCode: number, data: T }> {
   return new Promise((resolve, reject) => {
 
     let resData = "";
@@ -43,7 +43,7 @@ export function fetch(options: IFetchOptions): Promise<{ statusCode: number, dat
       headers: headers
     }, (response: http.IncomingMessage) => {
 
-      if (!wait) return resolve({ statusCode: CODES.OK, data: true });
+      if (!wait) return resolve({ statusCode: CODES.OK, data: null });
 
       let statusCode = response.statusCode;
 
@@ -51,9 +51,9 @@ export function fetch(options: IFetchOptions): Promise<{ statusCode: number, dat
 
       response.on('end', () => {
         clearTimeout(timer);
-        let result: any;
+        let result: T;
         try { result = resData ? JSON.parse(resData) : resData; }
-        catch (e) { result = resData; }
+        catch (e) { result = <any>resData; }
 
         if (statusCode >= 200 && statusCode < 400) resolve({ statusCode: statusCode, data: result });
         else reject({ statusCode, error: result });        
