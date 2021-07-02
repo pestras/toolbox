@@ -5,7 +5,7 @@ export function setOwnDeepBulkProps(src: any | any[], props: string[], value: an
 
   for (let key in src) {
     let index = props.indexOf(key);
-    console.log(key, index);
+    
     if (index > -1) {
       (<any>src)[key] = typeof value === "function" ? value((<any>src)[key], props[index]) : value;
     } else {
