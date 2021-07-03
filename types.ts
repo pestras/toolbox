@@ -1,42 +1,11 @@
-const typesMap = {
-  list: [Number, Boolean, String, Date, RegExp, Object, Array, Function],
-  values: ['number', 'boolean', 'string', 'date', 'regexp', 'object', 'array', 'function']
-};
-
-const typesList = ['number', 'int', 'float', 'string', 'boolean', 'primitive', 'date', 'regexp', 'function', 'object', 'array', 'any'];
-// 'number[]', 'int[]', 'float[]', 'string[]', 'boolean[]', 'primitive[]', 'date[]', 'regexp[]', 'function[]', 'object[]', 'array', 'any'
-
-function searchMap(value: any) {
-  if (typeof value === "function") {
-    let index = typesMap.list.indexOf(value);
-
-    if (index > -1)
-      return typesMap.values[index];
-  } else if (Array.isArray(value) && value.length === 1 && typeof value[0] === 'function') {
-    let index = typesList.indexOf(value[0]);
-
-    if (index > -1)
-      return typesMap.values[index] + '[]';
-  }
-
-  return null;
-}
-
-function searchReverseMap(values: string[]): any[] {
-  let result = [];
-  for (let value of values) {
-    let index = typesMap.values.indexOf(value);
-    if (index > -1)
-      result.push(typesMap.list[index]);
-  }
-
-  return result;
-}
 
 export const Types = {
+  get typesList() { 
+    return ['number', 'int', 'float', 'string', 'boolean', 'primitive', 'date', 'regexp', 'function', 'object', 'array', 'any'];
+  },
 
   isValidType(type: string): boolean {
-    return typesList.indexOf(type) > -1;
+    return this.typesList.indexOf(type) > -1;
   },
 
   number(value: any): boolean {
@@ -100,22 +69,20 @@ export const Types = {
   getTypesOf(value: any): string[] {
     let types = [];
     if (!Array.isArray(value)) {
-      for (let i = 0; i < typesList.length; i++)
-        if ((<any>this)[typesList[i]](value))
-          types.push(typesList[i]);
+      for (let i = 0; i < this.typesList.length; i++)
+        if ((<any>this)[this.typesList[i]](value))
+          types.push(this.typesList[i]);
     } else {
       types.push('array', 'any[]');
-      for (let i = 0; i < typesList.length; i++)
-        if (this.arrayOf(typesList[i], value))
-          types.push(typesList[i] + '[]');
+      for (let i = 0; i < this.typesList.length; i++)
+        if (this.arrayOf(this.typesList[i], value))
+          types.push(this.typesList[i] + '[]');
 
       if (this.object(value[0])) {
         types.push(value[0].constructor.name + '[]');
         types.push('object[]');
       }
     }
-
-    types.push(...searchReverseMap(types));
 
     if (types.indexOf("object") > -1) {
       types.push(value.constructor);
