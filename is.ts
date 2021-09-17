@@ -1,7 +1,7 @@
 import { Types } from "./types";
 
 export const Is = {
-  value(val: any): boolean { return (typeof val === 'string' && !!val.trim()) || (val !== undefined && val !== null); },
+  value(val: any): boolean { return (typeof val === 'string' && !!val.trim()) && val !== undefined && val !== null; },
   notEmpty(val: any): boolean { return (Array.isArray(val) && !!val.length) || (typeof val === 'string' && !!val.trim().length) || (Types.object(val) && !!Object.keys(val).length); },
   number(val: any): boolean { return !isNaN(+val); },
   name(val: string): boolean { return /^[A-Z][a-z]+(\s[A-Z][a-z]+)*$/g.test(val); },
